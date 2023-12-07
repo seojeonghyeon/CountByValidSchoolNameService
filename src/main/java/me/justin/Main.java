@@ -1,6 +1,6 @@
 package me.justin;
 
-import me.justin.modules.MainController;
+import me.justin.domain.MainController;
 
 public class Main {
     public static void main(String[] args) {

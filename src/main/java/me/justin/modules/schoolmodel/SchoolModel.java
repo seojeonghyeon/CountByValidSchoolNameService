@@ -1,16 +1,16 @@
-package me.justin.modules.school;
+package me.justin.modules.schoolmodel;
 
 import lombok.*;
 
 @Builder @AllArgsConstructor
 @Getter @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class School {
+public class SchoolModel {
     private String name;
     private Integer count;
 
-    public static School createSchool(String name){
-        return School.builder()
+    public static SchoolModel createSchool(String name){
+        return SchoolModel.builder()
                 .name(name)
                 .count(0)
                 .build();
@@ -20,6 +20,7 @@ public class School {
         this.count++;
     }
 
+    @Override
     public String toString() {
         if(name.endsWith("고")) {
             return name + "등학교"+ "\t" + count;

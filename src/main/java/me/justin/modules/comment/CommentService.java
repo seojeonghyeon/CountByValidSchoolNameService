@@ -4,15 +4,15 @@ package me.justin.modules.comment;
 import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
-import me.justin.modules.school.School;
-import me.justin.modules.school.SchoolService;
+import me.justin.modules.schoolmodel.SchoolModel;
+import me.justin.modules.schoolmodel.SchoolModelService;
 
 import java.util.List;
 
 @Slf4j
 public class CommentService {
     private final CsvService csvService = CsvService.getInstance();
-    private final SchoolService schoolService = SchoolService.getInstance();
+    private final SchoolModelService schoolModelService = SchoolModelService.getInstance();
 
     private CommentService(){}
 
@@ -27,8 +27,8 @@ public class CommentService {
     public void extractValidSchoolNameFromCommentCSV(){
         CsvReader commentReader = csvService.createCommentsReader();
         List<String> commentReaderReadCSV = commentReader.getReadCSV();
-        List<School> schoolList = schoolService.findAll();
-        schoolList.forEach(
+        List<SchoolModel> schoolModelList = schoolModelService.findAll();
+        schoolModelList.forEach(
                 school -> commentReaderReadCSV
                         .stream()
                         .filter(comment -> contains(comment, school.getName()))

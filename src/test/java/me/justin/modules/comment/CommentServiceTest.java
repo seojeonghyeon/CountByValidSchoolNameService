@@ -1,7 +1,7 @@
 package me.justin.modules.comment;
 
-import me.justin.modules.school.School;
-import me.justin.modules.school.SchoolService;
+import me.justin.modules.schoolmodel.SchoolModel;
+import me.justin.modules.schoolmodel.SchoolModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,12 +41,12 @@ class CommentServiceTest {
     private static final String SCHOOL_NAME_4 = "소하고";
     private static final String SCHOOL_NAME_5 = "창현고";
 
-    private SchoolService schoolService;
+    private SchoolModelService schoolModelService;
     private CommentService commentService;
 
     @BeforeEach
     void beforeAll(){
-        schoolService = SchoolService.getInstance();
+        schoolModelService = SchoolModelService.getInstance();
         commentService = CommentService.getInstance();
     }
 
@@ -60,10 +60,10 @@ class CommentServiceTest {
     @DisplayName("Comment CSV에서 유효한 학교 이름 추출")
     @Test
     void extractSchoolNameFromCSV(){
-        schoolService.saveSchoolList();
+        schoolModelService.persistSchoolList();
         commentService.extractValidSchoolNameFromCommentCSV();
-        School school = schoolService.findByName(SCHOOL_NAME_5);
-        assertThat(true).isEqualTo(school.getCount() == 1);
+        SchoolModel schoolModel = schoolModelService.findByName(SCHOOL_NAME_5);
+        assertThat(true).isEqualTo(schoolModel.getCount() == 1);
     }
 
     @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 정상")

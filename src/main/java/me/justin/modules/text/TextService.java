@@ -2,7 +2,7 @@ package me.justin.modules.text;
 
 
 import lombok.extern.slf4j.Slf4j;
-import me.justin.modules.school.School;
+import me.justin.modules.schoolmodel.SchoolModel;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public class TextService {
         return TextServiceHelper.TEXT_SERVICE;
     }
 
-    public void writeTextFile(List<School> schoolList){
-        TextFile textFile = TextFile.createTextFile(TEXT_FILE_NAME, schoolList);
+    public void writeTextFile(List<SchoolModel> schoolModelList){
+        TextFile textFile = TextFile.createTextFile(TEXT_FILE_NAME, schoolModelList);
         log.debug("Created TextFile Object for writing the text file - TEXT FILE CONTENTS \n{}", textFile.getContents());
         textFile.writeTextFile();
         log.info("School List is written the text file except of zero count - TEXT FILE NAME : {}", textFile.getFileName());

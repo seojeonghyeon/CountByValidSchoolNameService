@@ -1,6 +1,7 @@
 package me.justin.modules.comment;
 
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
@@ -10,11 +11,11 @@ import me.justin.modules.schoolmodel.SchoolModelService;
 import java.util.List;
 
 @Slf4j
+@NoArgsConstructor
 public class CommentService {
     private final CsvService csvService = CsvService.getInstance();
     private final SchoolModelService schoolModelService = SchoolModelService.getInstance();
 
-    private CommentService(){}
 
     private static class CommentServiceHelper {
         private static final CommentService COMMENT_SERVICE = new CommentService();

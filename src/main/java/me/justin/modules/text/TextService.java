@@ -1,17 +1,17 @@
 package me.justin.modules.text;
 
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.schoolmodel.SchoolModel;
 
 import java.util.List;
 
 @Slf4j
+@NoArgsConstructor
 public class TextService {
 
     private final static String TEXT_FILE_NAME = "output/result.txt";
-
-    private TextService(){}
 
     private static class TextServiceHelper {
         private static final TextService TEXT_SERVICE = new TextService();

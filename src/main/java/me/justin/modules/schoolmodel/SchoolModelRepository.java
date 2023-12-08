@@ -1,12 +1,13 @@
 package me.justin.modules.schoolmodel;
 
 
+import lombok.NoArgsConstructor;
+
 import java.util.*;
 
+@NoArgsConstructor
 public class SchoolModelRepository {
     private static final Map<String, SchoolModel> store = new HashMap<>();
-
-    private SchoolModelRepository(){}
 
     private static class SchoolRepositoryHelper {
         private static final SchoolModelRepository SCHOOL_REPOSITORY = new SchoolModelRepository();

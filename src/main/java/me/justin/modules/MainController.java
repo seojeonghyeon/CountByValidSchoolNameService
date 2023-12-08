@@ -1,5 +1,6 @@
 package me.justin.modules;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.comment.CommentService;
 import me.justin.modules.schoolmodel.SchoolModel;
@@ -9,13 +10,12 @@ import me.justin.modules.text.TextService;
 import java.util.List;
 
 @Slf4j
+@NoArgsConstructor
 public class MainController {
 
     private final CommentService commentService = CommentService.getInstance();
     private final SchoolModelService schoolModelService = SchoolModelService.getInstance();
     private final TextService textService = TextService.getInstance();
-
-    private MainController(){}
 
     private static class MainControllerHelper {
         private static final MainController MAIN_CONTROLLER = new MainController();

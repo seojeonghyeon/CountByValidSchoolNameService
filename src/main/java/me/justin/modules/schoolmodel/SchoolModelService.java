@@ -1,5 +1,6 @@
 package me.justin.modules.schoolmodel;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
@@ -7,11 +8,10 @@ import me.justin.modules.csv.CsvService;
 import java.util.List;
 
 @Slf4j
+@NoArgsConstructor
 public class SchoolModelService {
     private final SchoolModelRepository schoolModelRepository = SchoolModelRepository.getInstance();
     private final CsvService csvService = CsvService.getInstance();
-
-    private SchoolModelService(){}
 
     private static class SchoolServiceHelper {
         private static final SchoolModelService SCHOOL_SERVICE = new SchoolModelService();

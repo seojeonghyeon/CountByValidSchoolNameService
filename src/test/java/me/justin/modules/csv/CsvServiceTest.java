@@ -30,20 +30,20 @@ class CsvServiceTest {
     @Test
     void createCommentsReader() {
         CsvReader csvReader = csvService.createCommentsReader();
-        assertThat(COMMENTS_CONTENT_1).isEqualTo(csvReader.getReadCSV().get(0));
+        assertThat(COMMENTS_CONTENT_1).isEqualTo(csvReader.getStrSchoolList().get(0));
     }
 
     @DisplayName("High School List CSV 읽기 여부 확인 : 접미사 '등학교' 제거")
     @Test
     void createHighSchoolReader() {
         CsvReader csvReader = csvService.createHighSchoolReader();
-        assertThat(HIGH_SCHOOL_NAME).isEqualTo(csvReader.getReadCSV().get(0));
+        assertThat(HIGH_SCHOOL_NAME).isEqualTo(csvReader.getStrSchoolList().get(0));
     }
 
     @DisplayName("Middle School List CSV 읽기 여부 확인 : 접미사 '학교' 제거")
     @Test
     void createMiddleSchoolReader() {
         CsvReader csvReader = csvService.createMiddleSchoolReader();
-        assertThat(MIDDLE_SCHOOL_NAME).isEqualTo(csvReader.getReadCSV().get(0));
+        assertThat(MIDDLE_SCHOOL_NAME).isEqualTo(csvReader.getStrSchoolList().get(0));
     }
 }

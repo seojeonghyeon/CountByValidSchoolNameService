@@ -41,10 +41,10 @@ public class CommentService {
                 schoolModelList.add(getSchoolModel);
                 getSchoolModel = schoolModelList.poll();
             }
-            if(endPoint.equals(getSchoolModel.getName())){
+            if(getSchoolModel != null && endPoint.equals(getSchoolModel.getName())){
                 break;
             }
-            if(contains(getComment, getSchoolModel.getName())){
+            if(getSchoolModel != null && contains(getComment, getSchoolModel.getName())){
                 log.debug("Processing count up by school's name - SCHOOL NAME : {}, COMMENT : {}", getSchoolModel.getName(), getComment);
                 getSchoolModel.addCount();
                 continue;

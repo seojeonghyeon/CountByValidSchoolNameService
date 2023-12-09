@@ -39,6 +39,10 @@ public class SchoolModelRepository {
         return new ArrayList<>(store.values());
     }
 
+    public Queue<SchoolModel> findAllQueueType() {
+        return new ArrayDeque<>(store.values());
+    }
+
     public void clearStore() {
         store.clear();
     }

@@ -9,6 +9,7 @@ import me.justin.modules.schoolmodel.SchoolModel;
 import me.justin.modules.schoolmodel.SchoolModelService;
 
 import java.util.List;
+import java.util.Queue;
 
 @Slf4j
 @NoArgsConstructor
@@ -26,18 +27,30 @@ public class CommentService {
     }
 
     public void extractValidSchoolNameFromCommentCSV(){
+        String endPoint = "종료 지점";
+
         CsvReader commentReader = csvService.createCommentsReader();
-        List<String> commentReaderReadCSV = commentReader.getReadCSV();
-        List<SchoolModel> schoolModelList = schoolModelService.findAll();
-        schoolModelList.forEach(
-                school -> commentReaderReadCSV
-                        .stream()
-                        .filter(comment -> contains(comment, school.getName()))
-                        .forEach(comment -> {
-                            log.debug("Processing count up by school's name - SCHOOL NAME : {}, COMMENT : {}", school.getName(), comment);
-                            school.addCount();
-                        })
-        );
+        Queue<String> comments = commentReader.getComments();
+        Queue<SchoolModel> schoolModelList = schoolModelService.findAllQueueType();
+
+        SchoolModel getSchoolModel = schoolModelList.poll();
+        schoolModelList.add(SchoolModel.createSchool(endPoint));
+        while(!comments.isEmpty()){
+            String getComment = comments.poll();
+            if(endPoint.equals(getComment)) {
+                schoolModelList.add(getSchoolModel);
+                getSchoolModel = schoolModelList.poll();
+            }
+            if(endPoint.equals(getSchoolModel.getName())){
+                break;
+            }
+            if(contains(getComment, getSchoolModel.getName())){
+                log.debug("Processing count up by school's name - SCHOOL NAME : {}, COMMENT : {}", getSchoolModel.getName(), getComment);
+                getSchoolModel.addCount();
+                continue;
+            }
+            comments.add(getComment);
+        }
         log.info("Valid School List was count by school from comments");
     }
 

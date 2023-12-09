@@ -9,8 +9,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 
 @Slf4j
@@ -21,12 +23,14 @@ public class CsvReader {
 
     private String fileName;
     private int index;
-    private List<String> readCSV;
+    private List<String> strSchoolList;
+    private Queue<String> comments;
 
     public static CsvReader createCsvReader(String fileName) {
         CsvReader csvReader = new CsvReader();
         csvReader.setFileName(fileName);
-        csvReader.setReadCSV(new ArrayList<>());
+        csvReader.setStrSchoolList(new ArrayList<>());
+        csvReader.setComments(new ArrayDeque<>());
         try {
             csvReader.addCSVStringList();
         }catch (IOException e){
@@ -65,16 +69,19 @@ public class CsvReader {
             String removeSuffix = isHighSchool ? highSchoolSuffix : middleSchoolSuffix;
             String replaceSchoolName = originalSchoolName.replaceAll(removeSuffix, replaceLetter).replaceAll(regexAllowKorean, replaceBlank);
             log.debug("Processing replace school's name - BEFORE SCHOOL NAME : {}, AFTER SCHOOL NAME : {}",originalSchoolName, replaceSchoolName);
-            this.readCSV.add(replaceSchoolName);
+            this.strSchoolList.add(replaceSchoolName);
         }
     }
     private void addLineContentsAboutComments(BufferedReader bufferedReader) throws IOException{
+        String endPoint = "종료 지점";
+
         Comment comment = Comment.createComment();
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             log.debug("Processing replace comment - BEFORE COMMENT : {}",line);
             translateComments(line, comment);
         }
+        this.comments.add(endPoint);
     }
 
     private void translateComments(String line, Comment comment){
@@ -90,7 +97,7 @@ public class CsvReader {
         String replaceComment = line.replaceAll(regexComment, replaceBlank);
 
         if(isExistTwoDoubleQuotesInOneLine){
-            this.readCSV.add(replaceComment);
+            this.comments.add(replaceComment);
             comment.initStringBuffer();
             comment.setFalseExistDoubleQuotes();
             log.debug("Processing replace comment - AFTER COMMENT : {}", replaceComment);
@@ -109,7 +116,7 @@ public class CsvReader {
             return;
         }
 
-        this.readCSV.add(replaceComment);
+        this.comments.add(replaceComment);
         log.debug("Processing replace comment - AFTER COMMENT : {}", replaceComment);
         comment.initStringBuffer();
     }

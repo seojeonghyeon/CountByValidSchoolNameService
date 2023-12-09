@@ -6,6 +6,7 @@ import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
 
 import java.util.List;
+import java.util.Queue;
 
 @Slf4j
 @NoArgsConstructor
@@ -39,6 +40,8 @@ public class SchoolModelService {
 
     public List<SchoolModel> findAll(){return schoolModelRepository.findAll();}
 
+    public Queue<SchoolModel> findAllQueueType(){return schoolModelRepository.findAllQueueType();}
+
     public void clearStore(){
         schoolModelRepository.clearStore();
     }
@@ -47,8 +50,8 @@ public class SchoolModelService {
         CsvReader highSchoolReader = csvService.createHighSchoolReader();
         CsvReader middleSchoolReader = csvService.createMiddleSchoolReader();
 
-        persistSchoolList(highSchoolReader.getReadCSV());
-        persistSchoolList(middleSchoolReader.getReadCSV());
+        persistSchoolList(highSchoolReader.getStrSchoolList());
+        persistSchoolList(middleSchoolReader.getStrSchoolList());
 
         log.info("School List saved on repository: {}", schoolModelRepository.getClass());
     }

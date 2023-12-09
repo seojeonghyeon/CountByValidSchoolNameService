@@ -1,7 +1,7 @@
 package me.justin.modules.text;
 
-import me.justin.modules.school.School;
-import me.justin.modules.school.SchoolService;
+import me.justin.modules.schoolmodel.SchoolModel;
+import me.justin.modules.schoolmodel.SchoolModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,11 +17,11 @@ class TextServiceTest {
     private final static String HIGH_SCHOOL_NAME = "국립국악고";
     private final static String TEXT_FILE_NAME = "output/result.txt";
 
-    private SchoolService schoolService;
+    private SchoolModelService schoolModelService;
     private TextService textService;
     @BeforeEach
     void beforeAll(){
-        schoolService = SchoolService.getInstance();
+        schoolModelService = SchoolModelService.getInstance();
         textService = TextService.getInstance();
     }
 
@@ -35,9 +35,9 @@ class TextServiceTest {
     @DisplayName("파일 생성 여부 확인")
     @Test
     void writeTextFile() {
-        List<School> schoolList = new ArrayList<>();
-        schoolList.add(School.createSchool(HIGH_SCHOOL_NAME));
-        textService.writeTextFile(schoolList);
+        List<SchoolModel> schoolModelList = new ArrayList<>();
+        schoolModelList.add(SchoolModel.createSchool(HIGH_SCHOOL_NAME));
+        textService.writeTextFile(schoolModelList);
         File file = new File(TEXT_FILE_NAME);
         assertThat(true).isEqualTo(file.exists());
     }

@@ -1,15 +1,15 @@
 package me.justin.modules.csv;
 
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@NoArgsConstructor
 public class CsvService {
     private static final String COMMENTS_CSV_FILE_NAME = "src/main/resources/csv/comments.csv";
     private static final String HIGH_SCHOOL_LIST_FILE_NAME = "src/main/resources/csv/2023년도_전국고등학교_학교명.csv";
     private static final String MIDDLE_SCHOOL_LIST_FILE_NAME = "src/main/resources/csv/2023년도_전국중학교_학교명.csv";
-
-    private CsvService(){}
 
     private static class CsvServiceHelper {
         private static final CsvService CSV_SERVICE = new CsvService();

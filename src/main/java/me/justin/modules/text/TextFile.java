@@ -2,7 +2,7 @@ package me.justin.modules.text;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import me.justin.modules.school.School;
+import me.justin.modules.schoolmodel.SchoolModel;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,16 +18,16 @@ public class TextFile {
     private String fileName;
     private String contents;
 
-    public static TextFile createTextFile(String fileName, List<School> schoolList){
+    public static TextFile createTextFile(String fileName, List<SchoolModel> schoolModelList){
         TextFile textFile = new TextFile();
         textFile.setFileName(fileName);
-        textFile.setContents(textFile.contents(schoolList));
+        textFile.setContents(textFile.contents(schoolModelList));
         return textFile;
     }
 
-    private String contents(List<School> schoolList){
+    private String contents(List<SchoolModel> schoolModelList){
         StringBuffer buffer = new StringBuffer();
-        schoolList.forEach(school -> buffer.append(school.toString()).append("\n"));
+        schoolModelList.forEach(school -> buffer.append(school.toString()).append("\n"));
         return buffer.toString();
     }
 

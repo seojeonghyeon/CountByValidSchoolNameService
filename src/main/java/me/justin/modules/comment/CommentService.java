@@ -1,20 +1,22 @@
 package me.justin.modules.comment;
 
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
-import me.justin.modules.school.School;
-import me.justin.modules.school.SchoolService;
+import me.justin.modules.schoolmodel.SchoolModel;
+import me.justin.modules.schoolmodel.SchoolModelService;
 
 import java.util.List;
+import java.util.Queue;
 
 @Slf4j
+@NoArgsConstructor
 public class CommentService {
     private final CsvService csvService = CsvService.getInstance();
-    private final SchoolService schoolService = SchoolService.getInstance();
+    private final SchoolModelService schoolModelService = SchoolModelService.getInstance();
 
-    private CommentService(){}
 
     private static class CommentServiceHelper {
         private static final CommentService COMMENT_SERVICE = new CommentService();
@@ -25,18 +27,30 @@ public class CommentService {
     }
 
     public void extractValidSchoolNameFromCommentCSV(){
+        String endPoint = "종료 지점";
+
         CsvReader commentReader = csvService.createCommentsReader();
-        List<String> commentReaderReadCSV = commentReader.getReadCSV();
-        List<School> schoolList = schoolService.findAll();
-        schoolList.forEach(
-                school -> commentReaderReadCSV
-                        .stream()
-                        .filter(comment -> contains(comment, school.getName()))
-                        .forEach(comment -> {
-                            log.debug("Processing count up by school's name - SCHOOL NAME : {}, COMMENT : {}", school.getName(), comment);
-                            school.addCount();
-                        })
-        );
+        Queue<String> comments = commentReader.getComments();
+        Queue<SchoolModel> schoolModelList = schoolModelService.findAllQueueType();
+
+        SchoolModel getSchoolModel = schoolModelList.poll();
+        schoolModelList.add(SchoolModel.createSchool(endPoint));
+        while(!comments.isEmpty()){
+            String getComment = comments.poll();
+            if(endPoint.equals(getComment)) {
+                schoolModelList.add(getSchoolModel);
+                getSchoolModel = schoolModelList.poll();
+            }
+            if(endPoint.equals(getSchoolModel.getName())){
+                break;
+            }
+            if(contains(getComment, getSchoolModel.getName())){
+                log.debug("Processing count up by school's name - SCHOOL NAME : {}, COMMENT : {}", getSchoolModel.getName(), getComment);
+                getSchoolModel.addCount();
+                continue;
+            }
+            comments.add(getComment);
+        }
         log.info("Valid School List was count by school from comments");
     }
 

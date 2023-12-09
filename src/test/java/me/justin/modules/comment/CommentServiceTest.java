@@ -1,7 +1,7 @@
 package me.justin.modules.comment;
 
-import me.justin.modules.school.School;
-import me.justin.modules.school.SchoolService;
+import me.justin.modules.schoolmodel.SchoolModel;
+import me.justin.modules.schoolmodel.SchoolModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CommentServiceTest {
 
-    private static final String COMMENT =
+    private static final String COMMENT_1 = "message";
+
+    private static final String COMMENT_2 =
             "?경북 경산, 하양여자중학교?" +
             "이 글 보시는 하양여중 학생 분들, 공감되시는 분은" +
             "이 글 복사해서 배달의민족 게시물에 붙여넣기 해 주세요!!" +
@@ -35,18 +37,19 @@ class CommentServiceTest {
             "그리고 욕 좀 하지 마삼" +
             "사랑합니다. 배달의 민족 ❤";
 
+    private static final String COMMENT_3 = "하양여중";
+
     private static final String SCHOOL_NAME_1 = "하양여자중";
-    private static final String SCHOOL_NAME_2 = "하양여중";
     private static final String SCHOOL_NAME_3 = "원미고";
     private static final String SCHOOL_NAME_4 = "소하고";
     private static final String SCHOOL_NAME_5 = "창현고";
 
-    private SchoolService schoolService;
+    private SchoolModelService schoolModelService;
     private CommentService commentService;
 
     @BeforeEach
     void beforeAll(){
-        schoolService = SchoolService.getInstance();
+        schoolModelService = SchoolModelService.getInstance();
         commentService = CommentService.getInstance();
     }
 
@@ -60,37 +63,44 @@ class CommentServiceTest {
     @DisplayName("Comment CSV에서 유효한 학교 이름 추출")
     @Test
     void extractSchoolNameFromCSV(){
-        schoolService.saveSchoolList();
+        schoolModelService.persistSchoolList();
         commentService.extractValidSchoolNameFromCommentCSV();
-        School school = schoolService.findByName(SCHOOL_NAME_5);
-        assertThat(true).isEqualTo(school.getCount() == 1);
+        SchoolModel schoolModel = schoolModelService.findByName(SCHOOL_NAME_5);
+        assertThat(true).isEqualTo(schoolModel.getCount() == 1);
+    }
+
+    @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 없음")
+    @Test
+    void isEqualsToSchoolName_With_No_Value(){
+        boolean result = commentService.contains(COMMENT_1, SCHOOL_NAME_1);
+        assertThat(false).isEqualTo(result);
     }
 
     @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 정상")
     @Test
     void isEqualsToSchoolName_With_Correct_Value(){
-        boolean result = commentService.contains(COMMENT, SCHOOL_NAME_1);
+        boolean result = commentService.contains(COMMENT_2, SCHOOL_NAME_1);
         assertThat(true).isEqualTo(result);
     }
 
     @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 정상(남고, 여고에 대한 처리)")
     @Test
     void isEqualsToSchoolName_With_Correct_Value_About_One_Gender_School_Name(){
-        boolean result = commentService.contains(COMMENT, SCHOOL_NAME_2);
+        boolean result = commentService.contains(COMMENT_3, SCHOOL_NAME_1);
         assertThat(true).isEqualTo(result);
     }
 
     @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 오류(다른 값)")
     @Test
     void isEqualsToSchoolName_With_Wrong_Value(){
-        boolean result = commentService.contains(COMMENT, SCHOOL_NAME_3);
+        boolean result = commentService.contains(COMMENT_2, SCHOOL_NAME_3);
         assertThat(false).isEqualTo(result);
     }
 
     @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 오류(유사 값)")
     @Test
     void isEqualsToSchoolName_With_Similar_Value(){
-        boolean result = commentService.contains(COMMENT, SCHOOL_NAME_4);
+        boolean result = commentService.contains(COMMENT_2, SCHOOL_NAME_4);
         assertThat(false).isEqualTo(result);
     }
 

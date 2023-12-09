@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CsvServiceTest {
 
-    private final static String COMMENTS_CONTENT = "";
+    private final static String COMMENTS_CONTENT_1 = "";
     private final static String HIGH_SCHOOL_NAME = "국립국악고";
     private final static String MIDDLE_SCHOOL_NAME = "서울대학교사범대학부설중";
 
@@ -30,7 +30,7 @@ class CsvServiceTest {
     @Test
     void createCommentsReader() {
         CsvReader csvReader = csvService.createCommentsReader();
-        assertThat(COMMENTS_CONTENT).isEqualTo(csvReader.getReadCSV().get(0));
+        assertThat(COMMENTS_CONTENT_1).isEqualTo(csvReader.getReadCSV().get(0));
     }
 
     @DisplayName("High School List CSV 읽기 여부 확인 : 접미사 '등학교' 제거")

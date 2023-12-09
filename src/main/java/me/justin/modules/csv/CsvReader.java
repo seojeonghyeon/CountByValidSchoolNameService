@@ -61,8 +61,9 @@ public class CsvReader {
 
         while ((originalSchoolName = bufferedReader.readLine()) != null) {
             boolean isHighSchool = fileName.endsWith("고등학교_학교명.csv");
+            String replaceLetter = isHighSchool ? "고" : "중";
             String removeSuffix = isHighSchool ? highSchoolSuffix : middleSchoolSuffix;
-            String replaceSchoolName = originalSchoolName.replaceAll(removeSuffix, replaceBlank).replaceAll(regexAllowKorean, replaceBlank) + (isHighSchool ? "고" : "중");
+            String replaceSchoolName = originalSchoolName.replaceAll(removeSuffix, replaceLetter).replaceAll(regexAllowKorean, replaceBlank);
             log.debug("Processing replace school's name - BEFORE SCHOOL NAME : {}, AFTER SCHOOL NAME : {}",originalSchoolName, replaceSchoolName);
             this.readCSV.add(replaceSchoolName);
         }

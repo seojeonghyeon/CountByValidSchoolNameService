@@ -32,6 +32,13 @@ public class CommentService {
         return CommentServiceHelper.COMMENT_SERVICE;
     }
 
+    /**
+     * 유효한 학교 이름을 댓글에서 추출 한다.
+     * 댓글과 학교 이름을 Queue로 받아 extractedSchoolNameFromComments Method에서 처리 한다.
+     *
+     * 처리 이후 남은 댓글 중 '학교'가 들어간 처리 되지 않은 댓글에 대해 개발자가 이후에 처리 가능 하도록 WARN LEVEL로 남긴다.
+     * (ex. CSV 파일 내 없는 학교(폐교 되어 없는 학교 이거나 오타이거나)
+     */
     public void extractValidSchoolNameFromCommentCSV(){
         String endPoint = "종료 지점";
 
@@ -46,6 +53,14 @@ public class CommentService {
         log.info("Valid School List was count by school from comments");
     }
 
+    /**
+     * 유효한 학교 이름을 댓글에서 추출 한다.
+     * 추출된 데이터는 SchoolModel 내 count parameter로 카운트 된다.
+     *
+     * @param endPoint "종료 지점"을 알려 주는 String
+     * @param comments 댓글 Queue
+     * @param schoolModelQueue 학교 Queue
+     */
     private void extractedSchoolNameFromComments(String endPoint, Queue<String> comments, Queue<SchoolModel> schoolModelQueue) {
         SchoolModel getSchoolModel = schoolModelQueue.poll();
         schoolModelQueue.add(SchoolModel.createSchool(endPoint));
@@ -67,6 +82,12 @@ public class CommentService {
         }
     }
 
+    /**
+     * 댓글에 학교 이름이 포함 되어 있는 지 검사 한다.
+     * @param comment 현재 확인이 진행 중인 댓글
+     * @param schoolName 현재 확인이 진행 중인 학교 이름
+     * @return 학교 이름이 포함 되어 있는지 여부
+     */
     public boolean contains(String comment, String schoolName){
         if(comment.length() < 2){
             return false;
@@ -107,6 +128,15 @@ public class CommentService {
         return result;
     }
 
+    /**
+     * KMP 알고리즘
+     * 긴 문자열에 대해서는 String contains에 비해 효율적,
+     * 짧은 문자열은 String contains가 더 효율적
+     *
+     * @param comment 댓글
+     * @param schoolName 학교 이름
+     * @return 댓글 내 학교 이름 포함 여부 확인
+     */
     private boolean kmpSearch(String comment, String schoolName) {
         int[] lps = computeLPSArray(schoolName);
         int i = 0;
@@ -127,7 +157,6 @@ public class CommentService {
                 }
             }
         }
-
         return false;
     }
 
@@ -155,6 +184,12 @@ public class CommentService {
     }
 
 
+    /**
+     * 특수 학교 이름을 줄여서 댓글에 표기했는지 여부를 확인한다.(ex. 경기예술고 -> 경기예고)
+     * @param comment 댓글
+     * @param schoolName 학교이름
+     * @return 학교이름이 댓글에 포함되어 있는 지 여부
+     */
     private boolean isContainsSpecialSchoolInSchoolName(String comment, String schoolName) {
         String science = "과학";
         String art = "예술";
@@ -190,23 +225,13 @@ public class CommentService {
                 || isContainsSpaceInSchoolName(1, comment, schoolName);
     }
 
-    private boolean isContainsWhenEraseFrontPoint(int minLength, String comment, String schoolName) {
-        if(schoolName.length() <= minLength){
-            return false;
-        }
-        String replaceSchoolName = removeCharacterAtIndex(schoolName, 0);
-        return isContainsSchoolNameInComment(comment, replaceSchoolName) || isContainsWhenEraseFrontPoint(minLength, comment, replaceSchoolName);
-    }
-
-    public String removeCharacterAtIndex(String schoolName, int indexToRemove) {
-        if (indexToRemove >= 0 && indexToRemove < schoolName.length()) {
-            StringBuilder result = new StringBuilder(schoolName);
-            result.deleteCharAt(indexToRemove);
-            return result.toString();
-        }
-        return schoolName;
-    }
-
+    /**
+     * 학교 이름 내 공백이 들어가 있는 지 확인한다.
+     * @param position 공백 주입 위치
+     * @param comment 댓글
+     * @param schoolName 학교 이름
+     * @return 공백을 주입했을 때 댓글 내 공백을 주입한 학교 이름이 존재하는 지 여부
+     */
     private boolean isContainsSpaceInSchoolName(int position, String comment, String schoolName) {
         if(position >= schoolName.length()){
             return false;
@@ -217,6 +242,12 @@ public class CommentService {
                 || isContainsSpaceInSchoolName(position + 2, comment, replaceSchoolName));
     }
 
+    /**
+     * 특정 위치에 공백을 주입한다.
+     * @param schoolName 학교 이름
+     * @param position 특정 위치
+     * @return 공백을 주입한 학교 이름
+     */
     public String addSpaceAtPosition(String schoolName, int position) {
         StringBuilder result = new StringBuilder(schoolName);
         if (position >= 0 && position <= schoolName.length()) {
@@ -225,8 +256,14 @@ public class CommentService {
         return result.toString();
     }
 
+    /**
+     * 남자 학교 or 여자 학교 인 경우 줄여서 댓글을 썼는지 확인한다. (ex. 소명여자고 -> 소명여고)
+     * @param isMale - true : 남자, false : 여자
+     * @param comment - 댓글
+     * @param schoolName - 학교 이름
+     * @return 줄여서 댓글에 학교 이름을 기입했는 지 여부(공백 주입 포함)
+     */
     private boolean isContainsOneGenderSchoolInSchoolName(boolean isMale, String comment, String schoolName){
-        boolean isSchoolNameLengthLongerThanThree = schoolName.length() > 3;
         String gender = isMale ? "남" : "여";
         String[] splitStr =schoolName.split(isMale ? "남자" : "여자");
         schoolName = splitStr[0] + gender + splitStr[1];
@@ -234,13 +271,18 @@ public class CommentService {
                 || isContainsSpaceInSchoolName(1, comment, schoolName);
     }
 
+    /**
+     * 댓글 내 학교 이름이 포함되어 있는 지 여부를 확인한다.
+     * KMP 알고리즘으로 비교를 진행한다.
+     * @param comment 확인하고자 하는 댓글
+     * @param schoolName 학교 이름
+     * @return 포함 여부
+     */
     private boolean isContainsSchoolNameInComment(String comment, String schoolName){
         char space = ' ';
         if (kmpSearch(comment, schoolName)){
             int index = comment.indexOf(schoolName);
-            boolean isNotUniversity = schoolName.endsWith("대") && comment.contains("고등");
             boolean isOtherMeanNotSchoolName = index >= 1 && comment.charAt(index-1)!=space && index >=2 && comment.charAt(index-2)==space;
-            if(isNotUniversity) return false;
             return !isOtherMeanNotSchoolName;
         }
         return false;

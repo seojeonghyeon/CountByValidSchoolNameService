@@ -12,13 +12,6 @@ import java.util.Queue;
 @NoArgsConstructor
 public class SchoolModelService {
 
-    private final static String UNIVERSITY_NAME= "대학교";
-    private final static String HIGH_SCHOOL_NAME= "고등학교";
-    private final static String MIDDLE_SCHOOL_NAME= "중학교";
-    private final static String ELEMENTARY_SCHOOL_NAME= "초등학교";
-    private final static String SPECIAL_SCHOOL_NAME= "특수학교";
-    private final static String ETC_SCHOOL_NAME= "그외학교";
-
     private final SchoolModelRepository schoolModelRepository = SchoolModelRepository.getInstance();
     private final CsvService csvService = CsvService.getInstance();
 
@@ -54,6 +47,10 @@ public class SchoolModelService {
         schoolModelRepository.clearStore();
     }
 
+    /**
+     * 초등학교, 중학교, 고등학교, 대학교, 특수학교, 그외 학교에 대해 CSV File을 읽어 CsvReader Object를 생성하고
+     * 생성한 CsvReader Object를 이용하여 SchoolModelRepository에 Persist한다.
+     */
     public void persistSchoolList(){
 
         CsvReader specialSchoolReader = csvService.createSpecialSchoolReader();

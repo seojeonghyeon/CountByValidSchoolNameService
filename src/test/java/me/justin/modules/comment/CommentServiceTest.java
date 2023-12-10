@@ -38,11 +38,15 @@ class CommentServiceTest {
             "사랑합니다. 배달의 민족 ❤";
 
     private static final String COMMENT_3 = "하양여중";
+    private static final String COMMENT_4 = "하 양 여 자 중";
+    private static final String COMMENT_5 = "하 양 여 중";
+    private static final String COMMENT_6 = "춘천중";
 
     private static final String SCHOOL_NAME_1 = "하양여자중";
     private static final String SCHOOL_NAME_3 = "원미고";
     private static final String SCHOOL_NAME_4 = "소하고";
     private static final String SCHOOL_NAME_5 = "창현고";
+    private static final String SCHOOL_NAME_6 = "남춘천중";
 
     private SchoolModelService schoolModelService;
     private CommentService commentService;
@@ -83,10 +87,31 @@ class CommentServiceTest {
         assertThat(true).isEqualTo(result);
     }
 
+    @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 정상(띄어쓰기 포함)")
+    @Test
+    void isEqualsToSchoolName_With_Correct_Value_About_Space(){
+        boolean result = commentService.contains(COMMENT_4, SCHOOL_NAME_1);
+        assertThat(true).isEqualTo(result);
+    }
+
+    @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 정상(띄어쓰기 포함, 여고에 대한 처리)")
+    @Test
+    void isEqualsToSchoolName_With_Correct_Value_About_Space_And_One_Gender(){
+        boolean result = commentService.contains(COMMENT_4, SCHOOL_NAME_1);
+        assertThat(true).isEqualTo(result);
+    }
+
+    @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 정상(앞 자리 지우기)")
+    @Test
+    void isEqualsToSchoolName_With_Correct_Value_About_Erase_Front_Word(){
+        boolean result = commentService.contains(COMMENT_4, SCHOOL_NAME_6);
+        assertThat(true).isEqualTo(result);
+    }
+
     @DisplayName("학교 이름이 포함 되어 있는 지 확인 - 정상(남고, 여고에 대한 처리)")
     @Test
     void isEqualsToSchoolName_With_Correct_Value_About_One_Gender_School_Name(){
-        boolean result = commentService.contains(COMMENT_3, SCHOOL_NAME_1);
+        boolean result = commentService.contains(COMMENT_5, SCHOOL_NAME_1);
         assertThat(true).isEqualTo(result);
     }
 

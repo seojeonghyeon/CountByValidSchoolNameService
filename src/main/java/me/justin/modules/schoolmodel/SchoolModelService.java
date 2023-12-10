@@ -47,11 +47,15 @@ public class SchoolModelService {
     }
 
     public void persistSchoolList(){
+        CsvReader universityReader = csvService.createUniversityReader();
         CsvReader highSchoolReader = csvService.createHighSchoolReader();
         CsvReader middleSchoolReader = csvService.createMiddleSchoolReader();
+        CsvReader elementarySchoolReader = csvService.createElementarySchoolReader();
 
+        persistSchoolList(universityReader.getStrSchoolList());
         persistSchoolList(highSchoolReader.getStrSchoolList());
         persistSchoolList(middleSchoolReader.getStrSchoolList());
+        persistSchoolList(elementarySchoolReader.getStrSchoolList());
 
         log.info("School List saved on repository: {}", schoolModelRepository.getClass());
     }

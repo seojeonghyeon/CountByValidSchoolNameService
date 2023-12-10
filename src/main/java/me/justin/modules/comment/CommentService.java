@@ -8,7 +8,6 @@ import me.justin.modules.csv.CsvService;
 import me.justin.modules.schoolmodel.SchoolModel;
 import me.justin.modules.schoolmodel.SchoolModelService;
 
-import java.util.List;
 import java.util.Queue;
 
 @Slf4j
@@ -51,24 +50,85 @@ public class CommentService {
             }
             comments.add(getComment);
         }
+        comments.forEach(comment -> log.debug("Rest Comments : {}",comment));
         log.info("Valid School List was count by school from comments");
     }
 
     public boolean contains(String comment, String schoolName){
+        if(comment.length() < 2){
+            return false;
+        }
+        schoolName = schoolName.equals("명문고") ? "명문고등" : schoolName;
+
         String male = "남자";
         String female = "여자";
         boolean isOneGenderSchool = schoolName.contains(male) || schoolName.contains(female);
+        boolean isSpecialSchool = schoolName.contains("과학")
+                || schoolName.contains("상업")
+                || schoolName.contains("국제")
+                || schoolName.contains("디자인")
+                || schoolName.contains("인터넷")
+                || schoolName.contains("외국어")
+                || schoolName.contains("사관")
+                || schoolName.contains("체육");
+        int minLength = isSpecialSchool ? 6 : 3;
         boolean result = isContainsSchoolNameInComment(comment, schoolName);
+        boolean isSchoolNameLengthLongerThanThree = schoolName.length() > minLength;
+        if(!result){
+            result = isContainsSpaceInSchoolName(1, comment, schoolName);
+        }
         if(!result && isOneGenderSchool){
-            result = isContainsOneGenderSchoolInComment(schoolName.contains(male), comment, schoolName);
+            result = isContainsOneGenderSchoolInSchoolName(schoolName.contains(male), comment, schoolName);
+        }
+        if(!result && !isOneGenderSchool && isSchoolNameLengthLongerThanThree){
+            result = isContainsWhenEraseFrontPoint(minLength, comment, schoolName);
         }
         return result;
     }
-    private boolean isContainsOneGenderSchoolInComment(boolean isMale, String comment, String schoolName){
+
+    private boolean isContainsWhenEraseFrontPoint(int minLength, String comment, String schoolName) {
+        if(schoolName.length() <= minLength){
+            return false;
+        }
+        String replaceSchoolName = removeCharacterAtIndex(schoolName, 0);
+        return isContainsSchoolNameInComment(comment, replaceSchoolName) || isContainsWhenEraseFrontPoint(minLength, comment, replaceSchoolName);
+    }
+
+    public String removeCharacterAtIndex(String schoolName, int indexToRemove) {
+        if (indexToRemove >= 0 && indexToRemove < schoolName.length()) {
+            StringBuilder result = new StringBuilder(schoolName);
+            result.deleteCharAt(indexToRemove);
+            return result.toString();
+        }
+        return schoolName;
+    }
+
+    private boolean isContainsSpaceInSchoolName(int position, String comment, String schoolName) {
+        if(position >= schoolName.length()){
+            return false;
+        }
+        String replaceSchoolName = addSpaceAtPosition(schoolName, position);
+        return isContainsSchoolNameInComment(comment, replaceSchoolName)
+                || (isContainsSpaceInSchoolName(position + 1, comment, schoolName)
+                || isContainsSpaceInSchoolName(position + 2, comment, replaceSchoolName));
+    }
+
+    public String addSpaceAtPosition(String schoolName, int position) {
+        StringBuilder result = new StringBuilder(schoolName);
+        if (position >= 0 && position <= schoolName.length()) {
+            result.insert(position, ' ');
+        }
+        return result.toString();
+    }
+
+    private boolean isContainsOneGenderSchoolInSchoolName(boolean isMale, String comment, String schoolName){
+        boolean isSchoolNameLengthLongerThanThree = schoolName.length() > 3;
         String gender = isMale ? "남" : "여";
         String[] splitStr =schoolName.split(isMale ? "남자" : "여자");
         schoolName = splitStr[0] + gender + splitStr[1];
-        return isContainsSchoolNameInComment(comment, schoolName);
+        return isContainsSchoolNameInComment(comment, schoolName)
+                || isContainsSpaceInSchoolName(1, comment, schoolName)
+                || isContainsWhenEraseFrontPoint(5, comment, schoolName);
     }
 
     private boolean isContainsSchoolNameInComment(String comment, String schoolName){

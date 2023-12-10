@@ -63,14 +63,16 @@ public class CsvReader {
         String highSchoolSuffix = "고등학교";
         String middleSchoolSuffix = "중학교";
         String elementarySchoolSuffix = "초등학교";
+        String etcSchoolSuffix = "학교";
         String regexAllowKorean = "[^가-힣]";
 
         while ((originalSchoolName = bufferedReader.readLine()) != null) {
             boolean isUniversity = fileName.endsWith("대학교_학교명.csv");
             boolean isHighSchool = fileName.endsWith("고등학교_학교명.csv");
             boolean isMiddleSchool = fileName.endsWith("중학교_학교명.csv");
-            String replaceLetter = isUniversity ? "대" : isHighSchool ? "고" : isMiddleSchool ? "중" : "초";
-            String removeSuffix = isUniversity ? universitySuffix : isHighSchool ? highSchoolSuffix : isMiddleSchool ? middleSchoolSuffix : elementarySchoolSuffix;
+            boolean isElementarySchool = fileName.endsWith("초등학교_학교명.csv");
+            String replaceLetter = isUniversity ? "대" : isHighSchool ? "고" : isMiddleSchool ? "중" : isElementarySchool ? "초" : "학교";
+            String removeSuffix = isUniversity ? universitySuffix : isHighSchool ? highSchoolSuffix : isMiddleSchool ? middleSchoolSuffix : isElementarySchool ? elementarySchoolSuffix : etcSchoolSuffix;
             String replaceSchoolName = originalSchoolName.replaceAll(removeSuffix, replaceLetter).replaceAll(regexAllowKorean, replaceBlank);
             log.debug("Processing replace school's name - BEFORE SCHOOL NAME : {}, AFTER SCHOOL NAME : {}",originalSchoolName, replaceSchoolName);
             this.strSchoolList.add(replaceSchoolName);

@@ -12,7 +12,8 @@ public class CsvService {
     private static final String MIDDLE_SCHOOL_LIST_FILE_NAME = "src/main/resources/csv/2023년도_전국중학교_학교명.csv";
     private static final String HIGH_SCHOOL_LIST_FILE_NAME = "src/main/resources/csv/2023년도_전국고등학교_학교명.csv";
     private static final String UNIVERSITY_LIST_FILE_NAME = "src/main/resources/csv/2023년도_전국대학교_학교명.csv";
-
+    private static final String SPECIAL_SCHOOL_LIST_FILE_NAME = "src/main/resources/csv/2023년도_전국특수학교_학교명.csv";
+    private static final String ETC_SCHOOL_LIST_FILE_NAME = "src/main/resources/csv/2023년도_전국그외학교_학교명.csv";
 
 
     private static class CsvServiceHelper {
@@ -44,6 +45,16 @@ public class CsvService {
 
     public CsvReader createUniversityReader(){
         log.debug("Processing create University CSV Reader - File Name: {}", UNIVERSITY_LIST_FILE_NAME);
+        return CsvReader.createCsvReader(UNIVERSITY_LIST_FILE_NAME);
+    }
+
+    public CsvReader createSpecialSchoolReader(){
+        log.debug("Processing create Special School CSV Reader - File Name: {}", SPECIAL_SCHOOL_LIST_FILE_NAME);
+        return CsvReader.createCsvReader(UNIVERSITY_LIST_FILE_NAME);
+    }
+
+    public CsvReader createEtcSchoolReader(){
+        log.debug("Processing create ETC School CSV Reader - File Name: {}", ETC_SCHOOL_LIST_FILE_NAME);
         return CsvReader.createCsvReader(UNIVERSITY_LIST_FILE_NAME);
     }
 

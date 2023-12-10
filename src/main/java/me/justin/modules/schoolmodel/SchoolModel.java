@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 public class SchoolModel {
     private String name;
+    private String target;
     private Integer count;
 
     public static SchoolModel createSchool(String name){
@@ -22,9 +23,9 @@ public class SchoolModel {
 
     @Override
     public String toString() {
-        if(name.endsWith("고")) {
+        if(name.endsWith("고") || name.endsWith("초")) {
             return name + "등학교"+ "\t" + count;
-        }else if(name.endsWith("중")){
+        }else if(name.endsWith("중") || name.endsWith("대")){
             return name + "학교" + "\t" + count;
         }
         return name + "\t" + count;

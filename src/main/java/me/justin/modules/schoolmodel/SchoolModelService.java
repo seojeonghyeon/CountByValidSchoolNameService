@@ -11,6 +11,14 @@ import java.util.Queue;
 @Slf4j
 @NoArgsConstructor
 public class SchoolModelService {
+
+    private final static String UNIVERSITY_NAME= "대학교";
+    private final static String HIGH_SCHOOL_NAME= "고등학교";
+    private final static String MIDDLE_SCHOOL_NAME= "중학교";
+    private final static String ELEMENTARY_SCHOOL_NAME= "초등학교";
+    private final static String SPECIAL_SCHOOL_NAME= "특수학교";
+    private final static String ETC_SCHOOL_NAME= "그외학교";
+
     private final SchoolModelRepository schoolModelRepository = SchoolModelRepository.getInstance();
     private final CsvService csvService = CsvService.getInstance();
 
@@ -47,15 +55,21 @@ public class SchoolModelService {
     }
 
     public void persistSchoolList(){
+
+        CsvReader specialSchoolReader = csvService.createSpecialSchoolReader();
+        CsvReader etcSchoolReader = csvService.createEtcSchoolReader();
         CsvReader universityReader = csvService.createUniversityReader();
         CsvReader highSchoolReader = csvService.createHighSchoolReader();
         CsvReader middleSchoolReader = csvService.createMiddleSchoolReader();
         CsvReader elementarySchoolReader = csvService.createElementarySchoolReader();
 
+
         persistSchoolList(universityReader.getStrSchoolList());
         persistSchoolList(highSchoolReader.getStrSchoolList());
         persistSchoolList(middleSchoolReader.getStrSchoolList());
         persistSchoolList(elementarySchoolReader.getStrSchoolList());
+        persistSchoolList(specialSchoolReader.getStrSchoolList());
+        persistSchoolList(etcSchoolReader.getStrSchoolList());
 
         log.info("School List saved on repository: {}", schoolModelRepository.getClass());
     }
